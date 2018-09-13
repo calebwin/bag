@@ -1,8 +1,17 @@
 local Bag = {}
+Bag.__index = Bag
 
-function Bag:__init()
+setmetatable(Bag, {
+  __call = function (cls, ...)
+    return cls.new(...)
+  end,
+})
+
+function Bag.new()
+  local self = setmetatable({}, Bag)
   self.contents = {}
   self.size = 0
+  return self
 end
 
 function Bag:add(element)
@@ -30,11 +39,4 @@ function Bag:copy()
   return bag_table
 end
 
-function Bag:__tostring()
-  str = "\["
-  for key in pairs(self.contents) do
-    str = str .. tostring(self.contents[key])
-  end
-  str = str:sub(1, -2) .. "\]"
-  return str
-end
+return Bag
